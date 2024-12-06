@@ -2,10 +2,8 @@
 
 namespace Beliven\Notarify\Services;
 
-use Illuminate\Support\Facades\Http;
-use Beliven\Notarify\Entities\FileToNotarize;
-use Beliven\Notarify\Exceptions\BlockchainException;
 use Beliven\Notarify\Contracts\NotarizationServiceContract;
+use Beliven\Notarify\Entities\FileToNotarize;
 
 class IuscriboService implements NotarizationServiceContract
 {

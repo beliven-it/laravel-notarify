@@ -2,23 +2,24 @@
 
 namespace Beliven\Notarify;
 
-use Illuminate\Support\Facades\Storage;
-use Beliven\Notarify\Entities\FileToNotarize;
 use Beliven\Notarify\Contracts\NotarizationServiceContract;
+use Beliven\Notarify\Entities\FileToNotarize;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\File\File;
 
-class Notarify {
-    public function __construct(private NotarizationServiceContract $notarizationService)
-    {
-    }
+class Notarify
+{
+    public function __construct(private NotarizationServiceContract $notarizationService) {}
 
-    public function upload(File $file) {
+    public function upload(File $file)
+    {
         return $this->handleFile($file, function ($fileToNotarize) {
             return $this->notarizationService->upload($fileToNotarize);
         });
     }
 
-    public function verify($file) {
+    public function verify($file)
+    {
         return $this->handleFile($file, function ($fileToNotarize) {
             return $this->notarizationService->verify($fileToNotarize);
         });
@@ -27,8 +28,7 @@ class Notarify {
     /**
      * Handle file temporary storage, processing, and cleanup.
      *
-     * @param Symfony\Component\HttpFoundation\File\File $file
-     * @param \Closure $process
+     * @param  Symfony\Component\HttpFoundation\File\File  $file
      * @return \Illuminate\Http\JsonResponse
      */
     private function handleFile(File $file, \Closure $process)

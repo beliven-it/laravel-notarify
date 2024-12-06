@@ -7,24 +7,32 @@ use Illuminate\Support\Facades\Storage;
 class FileToNotarize
 {
     protected $path;
+
     protected $size;
+
     protected string $fileName;
+
     protected string $type;
+
     protected string $algorithm;
+
     protected $content;
+
     protected string $hash;
+
     protected $metaData;
 
     public function __construct(protected string $filePath)
     {
-        if (!Storage::exists($filePath)) {
+        if (! Storage::exists($filePath)) {
             throw new \Exception('File does not exist');
         }
 
         $this->init($filePath);
     }
 
-    public function __get($property){
+    public function __get($property)
+    {
         return $this->{$property};
     }
 
@@ -52,12 +60,11 @@ class FileToNotarize
 
     private function getHashByAlgorithm()
     {
-        switch($this->algorithm){
+        switch ($this->algorithm) {
             case 'sha256':
                 return hash('sha256', $this->content);
             default:
                 throw new \Exception('Algorithm not supported');
         }
     }
-
 }

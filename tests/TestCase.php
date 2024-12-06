@@ -2,9 +2,9 @@
 
 namespace Beliven\Notarify\Tests;
 
+use Beliven\Notarify\NotarifyServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Beliven\Notarify\NotarifyServiceProvider;
 
 class TestCase extends Orchestra
 {

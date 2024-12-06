@@ -2,10 +2,10 @@
 
 namespace Beliven\Notarify\Services;
 
-use Illuminate\Support\Facades\Http;
+use Beliven\Notarify\Contracts\NotarizationServiceContract;
 use Beliven\Notarify\Entities\FileToNotarize;
 use Beliven\Notarify\Exceptions\BlockchainAuthException;
-use Beliven\Notarify\Contracts\NotarizationServiceContract;
+use Illuminate\Support\Facades\Http;
 
 class Notarify4Service implements NotarizationServiceContract
 {

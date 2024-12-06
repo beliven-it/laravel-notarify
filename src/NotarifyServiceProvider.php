@@ -2,14 +2,14 @@
 
 namespace Beliven\Notarify;
 
-use Illuminate\Support\Facades\Route;
-use Spatie\LaravelPackageTools\Package;
+use Beliven\Notarify\Contracts\NotarizationServiceContract;
+use Beliven\Notarify\Http\Controllers\NotarizationController;
 use Beliven\Notarify\Services\IuscriboService;
 use Beliven\Notarify\Services\Notarify4Service;
 use Beliven\Notarify\Services\ScalingParrotsService;
+use Illuminate\Support\Facades\Route;
+use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Beliven\Notarify\Contracts\NotarizationServiceContract;
-use Beliven\Notarify\Http\Controllers\NotarizationController;
 
 class NotarifyServiceProvider extends PackageServiceProvider
 {
@@ -26,8 +26,6 @@ class NotarifyServiceProvider extends PackageServiceProvider
             ->hasViews()
             ->hasMigration('create_notarify_records_table');
 
-
-
         /**
          * Register a singleton instance of the NotarizationServiceContract.
          *
@@ -37,19 +35,20 @@ class NotarifyServiceProvider extends PackageServiceProvider
          * - 'notarify4': Binds to Notarify4Service
          * - 'iuscribo': Binds to IuscriboService
          *
-         * @param \Illuminate\Contracts\Foundation\Application $app The application instance.
+         * @param  \Illuminate\Contracts\Foundation\Application  $app  The application instance.
          * @return \NotarizationServiceContract The implementation of the NotarizationServiceContract.
          *
          * @throws \InvalidArgumentException If the configured service is missing or not supported.
          */
         $this->app->singleton(NotarizationServiceContract::class, function ($app) {
             $service = config('notarify.default');
+
             return match ($service) {
-                'scaling_parrots' => new ScalingParrotsService(),
-                'notarify4'       => new Notarify4Service(),
-                'iuscribo'        => new IuscriboService(),
-                null              => throw new \InvalidArgumentException("No notarization service configured. Use the 'NOTARIFY_SERVICE' environment variable."),
-                default           => throw new \InvalidArgumentException("Unsupported notarization service: {$service}"),
+                'scaling_parrots' => new ScalingParrotsService,
+                'notarify4' => new Notarify4Service,
+                'iuscribo' => new IuscriboService,
+                null => throw new \InvalidArgumentException("No notarization service configured. Use the 'NOTARIFY_SERVICE' environment variable."),
+                default => throw new \InvalidArgumentException("Unsupported notarization service: {$service}"),
             };
         });
     }
@@ -65,13 +64,13 @@ class NotarifyServiceProvider extends PackageServiceProvider
          * - POST /upload: Handles file uploads for notarization (handled by NotarizationController@upload)
          * - POST /verify: Verifies the notarized files (handled by NotarizationController@verify)
          *
-         * @param string $prefix The prefix for the notarization routes. Default is 'notarify'.
+         * @param  string  $prefix  The prefix for the notarization routes. Default is 'notarify'.
          */
         Route::macro('notarization', function (string $prefix = 'notarify') {
             Route::prefix($prefix)->name('notarify.')->group(function () {
-                Route::get('/', NotarizationController::class. '@showForm')->name('show_form');
-                Route::post('/upload', NotarizationController::class. '@upload')->name('upload');
-                Route::post('/verify', NotarizationController::class. '@verify')->name('verify');
+                Route::get('/', NotarizationController::class.'@showForm')->name('show_form');
+                Route::post('/upload', NotarizationController::class.'@upload')->name('upload');
+                Route::post('/verify', NotarizationController::class.'@verify')->name('verify');
             });
         });
     }

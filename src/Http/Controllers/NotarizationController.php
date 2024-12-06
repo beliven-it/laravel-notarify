@@ -2,9 +2,9 @@
 
 namespace Beliven\Notarify\Http\Controllers;
 
+use Beliven\Notarify\Facades\Notarify;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use Beliven\Notarify\Facades\Notarify;
 
 class NotarizationController extends Controller
 {
@@ -21,14 +21,13 @@ class NotarizationController extends Controller
     /**
      * Handle file upload for notarization.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     public function upload(Request $request)
     {
         $file = $this->validateAndGetFile($request);
 
-        if (!$file) {
+        if (! $file) {
             return $this->invalidFileResponse();
         }
 
@@ -38,14 +37,13 @@ class NotarizationController extends Controller
     /**
      * Verify a notarized file.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     public function verify(Request $request)
     {
         $file = $this->validateAndGetFile($request);
 
-        if (!$file) {
+        if (! $file) {
             return $this->invalidFileResponse();
         }
 
@@ -54,9 +52,6 @@ class NotarizationController extends Controller
 
     /**
      * Validate the uploaded file and return it.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\UploadedFile|null
      */
     private function validateAndGetFile(Request $request): ?UploadedFile
     {
