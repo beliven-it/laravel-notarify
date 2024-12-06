@@ -49,7 +49,7 @@ jobs:
       - name: Install dependencies
         run: |
           if [[ "${{ matrix.laravel }}" == "10.*" ]]; then
-            composer require --dev "pestphp/pest:^2.0" "pestphp/pest-plugin-arch:^2.0" "pestphp/pest-plugin-laravel:^2.0" "orchestra/canvas:^8.1" --no-update
+            composer require --dev "pestphp/pest:^2.0" "pestphp/pest-plugin-arch:^2.0" "pestphp/pest-plugin-laravel:^2.0" "orchestra/canvas:^8.12.0" --no-update
           else
             composer require --dev "pestphp/pest:^3.0" "pestphp/pest-plugin-arch:^3.0" "pestphp/pest-plugin-laravel:^3.0" --no-update
           fi
