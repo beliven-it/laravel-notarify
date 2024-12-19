@@ -1,39 +1,39 @@
 <?php
 
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Config;
 use Beliven\Notarify\Entities\Notarization;
-use Symfony\Component\HttpFoundation\File\File;
-use Beliven\Notarify\Services\IuscriboService;
 use Beliven\Notarify\Exceptions\NotarizationAuthException;
 use Beliven\Notarify\Exceptions\NotarizationUploadException;
 use Beliven\Notarify\Exceptions\NotarizationVerificationException;
+use Beliven\Notarify\Services\IuscriboService;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\File\File;
 
 beforeEach(function () {
     Config::set('notarify.services.iuscribo.endpoint', 'https://example.com');
     Config::set('notarify.services.iuscribo.company', 'testcompany');
 
-    $this->service = new IuscriboService();
+    $this->service = new IuscriboService;
 });
 
 it('uploads a file successfully', function () {
     Http::fake([
         '*/auth/login' => Http::response([
-            'token' => 'auth-token'
+            'token' => 'auth-token',
         ], 200),
         '*/notarization/testcompany/createandfinalize' => Http::response([
             'value' => [
                 'id' => 'test-id',
                 'notarizationDate' => '2024-12-11T17:05:10.5198288+01:00',
                 'document' => [
-                    'documentHash' => 'test-hash'
+                    'documentHash' => 'test-hash',
                 ],
                 'blockchainExplorer' => 'https://explorer.com/tx/',
                 'coordinatesStep' => [
-                    'transactionId' => 'test-tx'
-                ]
-            ]
+                    'transactionId' => 'test-tx',
+                ],
+            ],
         ], 200),
     ]);
 
@@ -52,10 +52,10 @@ it('uploads a file successfully', function () {
 it('throws an exception when upload fails', function () {
     Http::fake([
         '*/auth/login' => Http::response([
-            'token' => 'auth-token'
+            'token' => 'auth-token',
         ], 200),
         '*/notarization/testcompany/createandfinalize' => Http::response([
-            'errorSummary' => 'Upload failed'
+            'errorSummary' => 'Upload failed',
         ], 400),
     ]);
 
@@ -69,20 +69,20 @@ it('throws an exception when upload fails', function () {
 it('verifies a notarization successfully from a Notarization instance', function () {
     Http::fake([
         '*/auth/login' => Http::response([
-            'token' => 'auth-token'
+            'token' => 'auth-token',
         ], 200),
         '*/notarization/testcompany/infobyhashcode*' => Http::response([
             'value' => [
                 'id' => 'test-id',
                 'notarizationDate' => '2024-12-11T17:05:10.5198288+01:00',
                 'document' => [
-                    'documentHash' => 'test-hash'
+                    'documentHash' => 'test-hash',
                 ],
                 'blockchainExplorer' => 'https://explorer.com/tx/',
                 'coordinatesStep' => [
-                    'transactionId' => 'test-tx'
-                ]
-            ]
+                    'transactionId' => 'test-tx',
+                ],
+            ],
         ], 200),
     ]);
 
@@ -102,20 +102,20 @@ it('verifies a notarization successfully from a file', function () {
 
     Http::fake([
         '*/auth/login' => Http::response([
-            'token' => 'auth-token'
+            'token' => 'auth-token',
         ], 200),
         '*/notarization/testcompany/infobyhashcode*' => Http::response([
             'value' => [
                 'id' => 'test-id',
                 'notarizationDate' => '2024-12-11T17:05:10.5198288+01:00',
                 'document' => [
-                    'documentHash' => 'test-hash'
+                    'documentHash' => 'test-hash',
                 ],
                 'blockchainExplorer' => 'https://explorer.com/tx/',
                 'coordinatesStep' => [
-                    'transactionId' => 'test-tx'
-                ]
-            ]
+                    'transactionId' => 'test-tx',
+                ],
+            ],
         ], 200),
     ]);
 
@@ -130,10 +130,10 @@ it('verifies a notarization successfully from a file', function () {
 it('throws an exception when verification fails', function () {
     Http::fake([
         '*/auth/login' => Http::response([
-            'token' => 'auth-token'
+            'token' => 'auth-token',
         ], 200),
         '*/notarization/testcompany/infobyhashcode*' => Http::response([
-            'errorSummary' => 'Verification failed'
+            'errorSummary' => 'Verification failed',
         ], 400),
     ]);
 
@@ -145,7 +145,7 @@ it('throws an exception when verification fails', function () {
 it('throws an exception when auth token retrieval fails', function () {
     Http::fake([
         '*/auth/login' => Http::response([
-            'errorSummary' => 'Auth failed'
+            'errorSummary' => 'Auth failed',
         ], 400),
     ]);
 

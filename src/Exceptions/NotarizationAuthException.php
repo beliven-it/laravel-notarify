@@ -6,7 +6,7 @@ use Exception;
 
 class NotarizationAuthException extends Exception
 {
-    protected static $defaultMessage = "Authentication error";
+    protected static $defaultMessage = 'Authentication error';
 
     public function __construct($message = null)
     {

@@ -1,20 +1,19 @@
 <?php
 
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Config;
 use Beliven\Notarify\Entities\Notarization;
-use Symfony\Component\HttpFoundation\File\File;
-use Beliven\Notarify\Services\ScalingParrotsService;
 use Beliven\Notarify\Exceptions\NotarizationAuthException;
 use Beliven\Notarify\Exceptions\NotarizationUploadException;
 use Beliven\Notarify\Exceptions\NotarizationVerificationException;
-
+use Beliven\Notarify\Services\ScalingParrotsService;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\File\File;
 
 beforeEach(function () {
     Config::set('notarify.services.scalingparrots.endpoint', 'https://example.com');
 
-    $this->service = new ScalingParrotsService();
+    $this->service = new ScalingParrotsService;
 });
 
 it('uploads a file successfully', function () {
@@ -23,12 +22,12 @@ it('uploads a file successfully', function () {
             [
                 'txId' => '12345',
                 'hash' => 'abcde',
-                'explorerUrl' => 'https://explorer.com/tx/12345'
-            ]
+                'explorerUrl' => 'https://explorer.com/tx/12345',
+            ],
         ], 200),
         '*/user/login' => Http::response([
-            'token' => 'auth-token'
-        ], 200)
+            'token' => 'auth-token',
+        ], 200),
     ]);
 
     $file = Mockery::mock(File::class);
@@ -45,11 +44,11 @@ it('uploads a file successfully', function () {
 it('throws an exception when upload fails', function () {
     Http::fake([
         '*/timestamp/stampHash' => Http::response([
-            ['error' => 'Upload failed']
+            ['error' => 'Upload failed'],
         ], 400),
         '*/user/login' => Http::response([
-            'token' => 'auth-token'
-        ], 200)
+            'token' => 'auth-token',
+        ], 200),
     ]);
 
     $file = Mockery::mock(File::class);
@@ -65,12 +64,12 @@ it('verifies a notarization successfully from a Notarization instance', function
                 'txId' => '12345',
                 'hash' => 'abcde',
                 'timestamp' => 1609459200,
-                'explorerUrl' => 'https://explorer.com/tx/12345'
-            ]
+                'explorerUrl' => 'https://explorer.com/tx/12345',
+            ],
         ], 200),
         '*/user/login' => Http::response([
-            'token' => 'auth-token'
-        ], 200)
+            'token' => 'auth-token',
+        ], 200),
     ]);
 
     $notarization = new Notarization('12345', 'abcde');
@@ -94,12 +93,12 @@ it('verifies a notarization successfully from a file', function () {
                 'txId' => '12345',
                 'hash' => 'abcde',
                 'timestamp' => 1609459200,
-                'explorerUrl' => 'https://explorer.com/tx/12345'
-            ]
+                'explorerUrl' => 'https://explorer.com/tx/12345',
+            ],
         ], 200),
         '*/user/login' => Http::response([
-            'token' => 'auth-token'
-        ], 200)
+            'token' => 'auth-token',
+        ], 200),
     ]);
 
     $notarization = $this->service->verify($file);
@@ -114,11 +113,11 @@ it('verifies a notarization successfully from a file', function () {
 it('throws an exception when verification fails', function () {
     Http::fake([
         '*/timestamp/checkHash/*' => Http::response([
-            ['error' => 'Verification failed']
+            ['error' => 'Verification failed'],
         ], 400),
         '*/user/login' => Http::response([
-            'token' => 'auth-token'
-        ], 200)
+            'token' => 'auth-token',
+        ], 200),
     ]);
 
     $notarization = new Notarization('12345', 'abcde');
@@ -129,8 +128,8 @@ it('throws an exception when verification fails', function () {
 it('throws an exception when auth token retrieval fails', function () {
     Http::fake([
         '*/user/login' => Http::response([
-            ['error' => 'Auth failed']
-        ], 400)
+            ['error' => 'Auth failed'],
+        ], 400),
     ]);
 
     $notarization = new Notarization('12345', 'abcde');

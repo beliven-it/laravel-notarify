@@ -2,23 +2,27 @@
 
 namespace Beliven\Notarify\Services;
 
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Http;
-use Beliven\Notarify\Entities\Notarization;
-use Symfony\Component\HttpFoundation\File\File;
-use Beliven\Notarify\Exceptions\NotarizationAuthException;
 use Beliven\Notarify\Contracts\NotarizationServiceContract;
+use Beliven\Notarify\Entities\Notarization;
+use Beliven\Notarify\Exceptions\NotarizationAuthException;
 use Beliven\Notarify\Exceptions\NotarizationUploadException;
 use Beliven\Notarify\Exceptions\NotarizationVerificationException;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\File\File;
 
 class ScalingParrotsService implements NotarizationServiceContract
 {
     private string $endpoint;
+
     private string $username;
+
     private string $password;
+
     private string $hashAlgorithm;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->endpoint = config('notarify.services.scalingparrots.endpoint');
         $this->username = config('notarify.services.scalingparrots.username');
         $this->password = config('notarify.services.scalingparrots.password');
@@ -44,7 +48,7 @@ class ScalingParrotsService implements NotarizationServiceContract
         $notarizationHash = $result[0]['hash'] ?? null;
         $notarizationExplorerUrl = $result[0]['explorerUrl'] ?? null;
 
-        if (!$notarizationHash || !$notarizationId || !$notarizationExplorerUrl) {
+        if (! $notarizationHash || ! $notarizationId || ! $notarizationExplorerUrl) {
             $errorMessage = $result[0]['error'] ?? null;
             throw new NotarizationUploadException($errorMessage);
         }
@@ -73,14 +77,14 @@ class ScalingParrotsService implements NotarizationServiceContract
             ? Carbon::createFromTimestampUTC($result[0]['timestamp'])
             : null;
 
-        if (!$notarizationId || !$notarizationDate || !$notarizationHash || !$notarizationExplorerUrl) {
+        if (! $notarizationId || ! $notarizationDate || ! $notarizationHash || ! $notarizationExplorerUrl) {
             $errorMessage = $result[0]['error'] ?? null;
             throw new NotarizationVerificationException($errorMessage);
         }
 
         return (new Notarization($notarizationId, $notarizationHash))
-                ->setTimestamp($notarizationDate)
-                ->addExplorerUrl($notarizationExplorerUrl);
+            ->setTimestamp($notarizationDate)
+            ->addExplorerUrl($notarizationExplorerUrl);
     }
 
     private function getAuthToken()
@@ -94,7 +98,7 @@ class ScalingParrotsService implements NotarizationServiceContract
 
         $token = $result['token'] ?? null;
 
-        if (!$token) {
+        if (! $token) {
             $errorMessage = $result[0]['error'] ?? null;
             throw new NotarizationAuthException($errorMessage);
         }

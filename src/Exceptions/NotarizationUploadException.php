@@ -6,7 +6,7 @@ use Exception;
 
 class NotarizationUploadException extends Exception
 {
-    protected static $defaultMessage = "Upload error";
+    protected static $defaultMessage = 'Upload error';
 
     public function __construct($message = null)
     {

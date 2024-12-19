@@ -6,7 +6,7 @@ use Exception;
 
 class NotarizationVerificationException extends Exception
 {
-    protected static $defaultMessage = "Verification error";
+    protected static $defaultMessage = 'Verification error';
 
     public function __construct($message = null)
     {

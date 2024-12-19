@@ -2,23 +2,29 @@
 
 namespace Beliven\Notarify\Services;
 
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Http;
-use Beliven\Notarify\Entities\Notarization;
-use Symfony\Component\HttpFoundation\File\File;
-use Beliven\Notarify\Exceptions\NotarizationAuthException;
 use Beliven\Notarify\Contracts\NotarizationServiceContract;
+use Beliven\Notarify\Entities\Notarization;
+use Beliven\Notarify\Exceptions\NotarizationAuthException;
 use Beliven\Notarify\Exceptions\NotarizationUploadException;
 use Beliven\Notarify\Exceptions\NotarizationVerificationException;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\File\File;
 
 class IuscriboService implements NotarizationServiceContract
 {
     private string $endpoint;
+
     private string $username;
+
     private string $password;
+
     private string $company;
+
     private string $blockchain;
+
     private string $sendMethod;
+
     private string $hashAlgorithm;
 
     public function __construct()
@@ -49,24 +55,24 @@ class IuscriboService implements NotarizationServiceContract
                 'BlockChainName' => $this->blockchain,
             ]);
 
-            $result = $response->json();
+        $result = $response->json();
 
-            $notarizationId = $result['value']['id'] ?? null;
-            $notarizationHash = $result['value']['document']['documentHash'] ?? null;
-            $notarizationBlockchainExplorer = $result['value']['blockchainExplorer'] ?? null;
-            $notarizationTransactionId = $result['value']['coordinatesStep']['transactionId'] ?? null;
-            $notarizationDate = isset($result['value']['notarizationDate'])
-                ? Carbon::parse($result['value']['notarizationDate'])->setTimezone('UTC')
-                : null;
+        $notarizationId = $result['value']['id'] ?? null;
+        $notarizationHash = $result['value']['document']['documentHash'] ?? null;
+        $notarizationBlockchainExplorer = $result['value']['blockchainExplorer'] ?? null;
+        $notarizationTransactionId = $result['value']['coordinatesStep']['transactionId'] ?? null;
+        $notarizationDate = isset($result['value']['notarizationDate'])
+            ? Carbon::parse($result['value']['notarizationDate'])->setTimezone('UTC')
+            : null;
 
-            if (!$notarizationId || !$notarizationDate || !$notarizationHash || !$notarizationBlockchainExplorer || !$notarizationTransactionId) {
-                $errorMessage = $result['errorSummary'] ?? null;
-                throw new NotarizationUploadException($errorMessage);
-            }
+        if (! $notarizationId || ! $notarizationDate || ! $notarizationHash || ! $notarizationBlockchainExplorer || ! $notarizationTransactionId) {
+            $errorMessage = $result['errorSummary'] ?? null;
+            throw new NotarizationUploadException($errorMessage);
+        }
 
-            return (new Notarization($notarizationId, $notarizationHash))
-                ->setTimestamp($notarizationDate)
-                ->addExplorerUrl("{$notarizationBlockchainExplorer}{$notarizationTransactionId}");
+        return (new Notarization($notarizationId, $notarizationHash))
+            ->setTimestamp($notarizationDate)
+            ->addExplorerUrl("{$notarizationBlockchainExplorer}{$notarizationTransactionId}");
     }
 
     public function verify(File|Notarization $notarization): Notarization
@@ -76,7 +82,6 @@ class IuscriboService implements NotarizationServiceContract
         $hash = $notarization instanceof Notarization
             ? $notarization->getHash()
             : hash($this->hashAlgorithm, $notarization->getContent());
-
 
         $response = Http::withToken($token)->get("{$this->endpoint}/notarization/{$this->company}/infobyhashcode", [
             'hashcode' => $hash,
@@ -92,14 +97,14 @@ class IuscriboService implements NotarizationServiceContract
         ? Carbon::parse($result['value']['notarizationDate'])->setTimezone('UTC')
         : null;
 
-        if (!$notarizationId || !$notarizationHash || !$notarizationDate || !$notarizationTransactionId || !$notarizationBlockchainExplorer) {
+        if (! $notarizationId || ! $notarizationHash || ! $notarizationDate || ! $notarizationTransactionId || ! $notarizationBlockchainExplorer) {
             $errorMessage = $result['errorSummary'] ?? null;
             throw new NotarizationVerificationException($errorMessage);
         }
 
         return (new Notarization($notarizationId, $notarizationHash))
-                ->setTimestamp($notarizationDate)
-                ->addExplorerUrl("{$notarizationBlockchainExplorer}{$notarizationTransactionId}");
+            ->setTimestamp($notarizationDate)
+            ->addExplorerUrl("{$notarizationBlockchainExplorer}{$notarizationTransactionId}");
     }
 
     private function getAuthToken(): string
@@ -113,7 +118,7 @@ class IuscriboService implements NotarizationServiceContract
 
         $token = $result['token'] ?? null;
 
-        if (!$token) {
+        if (! $token) {
             $errorMessage = $result['errorSummary'] ?? null;
             throw new NotarizationAuthException($errorMessage);
         }

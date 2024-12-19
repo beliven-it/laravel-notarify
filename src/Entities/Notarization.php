@@ -2,8 +2,8 @@
 
 namespace Beliven\Notarify\Entities;
 
-use JsonSerializable;
 use Illuminate\Support\Carbon;
+use JsonSerializable;
 
 /**
  * Class Notarization
@@ -14,31 +14,29 @@ class Notarization implements JsonSerializable
 {
     /**
      * The unique identifier for the notarization.
-     *
-     * @var string
      */
     private string $id;
 
     /**
-     * @var string $hash The hash value associated with the notarization.
+     * @var string The hash value associated with the notarization.
      */
     private string $hash;
 
     /**
-     * @var Carbon|null $timestamp The timestamp of the notarization, which can be null.
+     * @var Carbon|null The timestamp of the notarization, which can be null.
      */
     private ?Carbon $timestamp;
 
     /**
-     * @var array|null $explorerUrls An array of URLs for explorers, or null if not set.
+     * @var array|null An array of URLs for explorers, or null if not set.
      */
     private ?array $explorerUrls;
 
     /**
      * Notarization constructor.
      *
-     * @param string $id The unique identifier for the notarization.
-     * @param string $hash The hash value associated with the notarization.
+     * @param  string  $id  The unique identifier for the notarization.
+     * @param  string  $hash  The hash value associated with the notarization.
      */
     public function __construct(string $id, string $hash)
     {
@@ -110,60 +108,63 @@ class Notarization implements JsonSerializable
     /**
      * Set the ID for the notarization.
      *
-     * @param string $id The ID to set.
+     * @param  string  $id  The ID to set.
      * @return self Returns the instance of the Notarization for method chaining.
      */
     public function setId(string $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
     /**
      * Set the timestamp for the notarization.
      *
-     * @param Carbon $timestamp The timestamp to set.
-     * @return self
+     * @param  Carbon  $timestamp  The timestamp to set.
      */
     public function setTimestamp(Carbon $timestamp): self
     {
         $this->timestamp = $timestamp;
+
         return $this;
     }
 
     /**
      * Set the hash value.
      *
-     * @param string $hash The hash value to set.
-     * @return self
+     * @param  string  $hash  The hash value to set.
      */
     public function setHash(string $hash): self
     {
         $this->hash = $hash;
+
         return $this;
     }
 
     /**
      * Set the explorer URLs.
      *
-     * @param array $explorerUrls An array of explorer URLs.
+     * @param  array  $explorerUrls  An array of explorer URLs.
      * @return self Returns the current instance for method chaining.
      */
     public function setExplorerUrls(array $explorerUrls): self
     {
         $this->explorerUrls = $explorerUrls;
+
         return $this;
     }
 
     /**
      * Adds an explorer URL to the notarization entity's $explorerUrl array.
      *
-     * @param string $explorerUrl The URL of the explorer to be added.
+     * @param  string  $explorerUrl  The URL of the explorer to be added.
      * @return self Returns the instance of the Notarization entity.
      */
     public function addExplorerUrl(string $explorerUrl): self
     {
         $this->explorerUrls[] = $explorerUrl;
+
         return $this;
     }
 }

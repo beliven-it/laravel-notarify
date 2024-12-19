@@ -2,9 +2,9 @@
 
 namespace Beliven\Notarify;
 
+use Beliven\Notarify\Contracts\NotarizationServiceContract;
 use Beliven\Notarify\Entities\Notarization;
 use Symfony\Component\HttpFoundation\File\File;
-use Beliven\Notarify\Contracts\NotarizationServiceContract;
 
 class Notarify
 {
